@@ -41,7 +41,7 @@ NGINX Ingress Controller Installation References
 Argo CD Installation
 
 - [Installation](https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/)
-- [Ingress](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-ssl-termination-at-ingress-controller)
+- [Ingress](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/)
 - [Azure SAML](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/microsoft/#azure-ad-saml-enterprise-app-auth-using-dex)
 - [Goldilocks](https://goldilocks.docs.fairwinds.com/) and its [sizing issue with argocd-repo-server](https://github.com/argoproj/argo-cd/issues/9701)
 
