@@ -22,8 +22,10 @@ Argo CD
 - Since we are terminating TLS at our ingress controller (via a wildcard cert), we are using [TLS passthrough](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough) for the Argo CD ingress.
 - Argo CD does not come with CPU or Memory [requests/limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/), which are essential for proper Kubernetes resource management.
   - [VPA + Goldilocks](https://goldilocks.docs.fairwinds.com/) are installed to provide recommended requests/limits for Argo CD after 1 week of regular use. This is a nice, lightweight introduction to K8s resource management.
-  - Initial requests/limits are provided in the `prod` overlay. These are from the VPA in my lab (very low usage), so these should all (with the exception of argocd-repo-server) be replaced with recommendations from *your* Goldilocks.
-  - **IMPORTANT**: Goldilocks' recommendations for the **argocd-repo-server** Deployment are undersized, which cause sync errors and should not be used. 
+  - Initial requests/limits are provided in the `prod` overlay. These are from the VPA in my lab (very low usage), so these should  be replaced with recommendations from *your* Goldilocks.
+  - **IMPORTANT**: 
+    - Goldilocks' recommendations for the **argocd-repo-server** Deployment are very undersized, which cause sync errors and should not be used.
+    - Goldilocks' recommendations for the **argocd-server** Deployment are also undersized, which can might 404 errors during SAML login.
 
 ## Supporting Documentation
 
