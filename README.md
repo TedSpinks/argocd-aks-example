@@ -19,7 +19,7 @@ IPv6
 
 Argo CD
 - We are using Entra ID SAML for SSO
-- Since we are terminating TLS at our ingress controller (via a wildcard cert), we are using [TLS passthrough](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough) for the Argo CD ingress.
+- We are using [TLS passthrough](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough) for the Argo CD ingress.
 - Argo CD does not come with CPU or Memory [requests/limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/), which are essential for proper Kubernetes resource management.
   - [VPA + Goldilocks](https://goldilocks.docs.fairwinds.com/) are installed to provide recommended requests/limits for Argo CD after 1 week of regular use. This is a nice, lightweight introduction to K8s resource management.
   - Initial requests/limits are provided in the `prod` overlay. These are from the VPA in my lab (very low usage), so these should  be replaced with recommendations from *your* Goldilocks.
