@@ -19,7 +19,7 @@ IPv6
 
 Argo CD
 - We are using Entra ID SAML for SSO
-- Since we are terminating TLS at our ingress controller (via a wildcard cert), we are using the [2 ingress approach](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-ssl-termination-at-ingress-controller) for publishing Argo CD
+- Since we are terminating TLS at our ingress controller (via a wildcard cert), we are using [TLS passthrough](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough) for the Argo CD ingress.
 - Argo CD does not come with CPU or Memory [requests/limits](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/), which are essential for proper Kubernetes resource management.
   - [VPA + Goldilocks](https://goldilocks.docs.fairwinds.com/) are installed to provide recommended requests/limits for Argo CD after 1 week of regular use. This is a nice, lightweight introduction to K8s resource management.
   - Initial requests/limits are provided in the `prod` overlay. These are from the VPA in my lab (very low usage), so these should all (with the exception of argocd-repo-server) be replaced with recommendations from *your* Goldilocks.
@@ -79,7 +79,6 @@ Assign a static IPv4 and IPv4 address to be used for ingress URLs. Create the fo
   - ansible.example.com
 - Argo CD
   - argocd.example.com
-  - grpc-argocd.example.com
 - Goldilocks
   - goldilocks.example.com
 
@@ -101,7 +100,7 @@ Ingress
 
 Argo CD
 - Ingress
-  - [argocd/prod/kustomization.yaml](./argocd/prod/kustomization.yaml) - FQDNs (2) for UI and API
+  - [argocd/prod/kustomization.yaml](./argocd/prod/kustomization.yaml) - FQDN for UI and API
 - Apps
   - [argocd/prod/app-of-apps-root.yaml](./argocd/prod/app-of-apps-root.yaml) - GitOps repo URL
   - [argocd/prod/apps/argocd.yaml](./argocd/prod/apps/argocd.yaml) - GitOps repo URL
@@ -140,12 +139,16 @@ kubectl create secret generic postgres-configuration -n awx-prod \
   --from-literal=type=unmanaged
 ```
 
-#### 7. Precreate your default TLS secret for ingress
+#### 7. Precreate your default TLS secret for ingress and Argo CD
 
 ```bash
+# Default ingress TLS cert (wildcard)
 kubectl create ns ingress-nginx
-
 kubectl create secret tls default-tls -n ingress-nginx --key wildcard-tls-cert.key --cert wildcard-tls-cert.crt
+
+# TLS cert for Argo CD (can be same as default ingress)
+kubectl create ns argocd
+kubectl create secret tls argocd-server-tls -n argocd --key wildcard-tls-cert.key --cert wildcard-tls-cert.crt
 ```
 
 #### 8. Bootstrap the Argo CD installation

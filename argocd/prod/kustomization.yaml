@@ -5,17 +5,10 @@ resources:
   - app-of-apps-root.yaml
 
 patches:
-# Apply the FQDNs for this Argo CD environment
+# Apply the FQDN for this Argo CD environment
 - target:
     kind: Ingress
-    name: argocd-server-grpc-ingress
-  patch: |-
-    - op: replace
-      path: /spec/rules/0/host
-      value: grpc-argocd.example.com
-- target:
-    kind: Ingress
-    name: argocd-server-http-ingress
+    name: argocd-server-ingress
   patch: |-
     - op: replace
       path: /spec/rules/0/host

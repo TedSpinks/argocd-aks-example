@@ -18,9 +18,8 @@ resources:
   # - resources/install.yaml
 
   # Ingress resources
-  # See https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-ssl-termination-at-ingress-controller
-  - resources/argocd-server-http-ingress.yaml
-  - resources/argocd-server-grpc-ingress.yaml
+  # See https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-1-ssl-passthrough
+  - resources/argocd-server-ingress.yaml
 
 namespace: argocd
 
@@ -31,4 +30,3 @@ images:
 
 patchesStrategicMerge:
   - patches/argocd-cm.yaml
-  - patches/argocd-cmd-params-cm.yaml
