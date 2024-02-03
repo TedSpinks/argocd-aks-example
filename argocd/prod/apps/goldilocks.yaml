@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: goldilocks
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/TedSpinks/aks-argocd-example.git
+    targetRevision: HEAD
+    path: goldilocks/prod
+    # helm:
+    #   parameters:
+    #     - name: foo
+    #       value: bar
+    #   valueFiles:
+    #     - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: goldilocks
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true

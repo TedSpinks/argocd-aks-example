@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: argocd-application-controller
+spec:
+  template:
+    spec:
+      containers:
+      - name: argocd-application-controller
+        resources:
+          requests:
+            cpu: 22m
+            memory: 549M
+          limits:
+            cpu: 72m
+            memory: 700M

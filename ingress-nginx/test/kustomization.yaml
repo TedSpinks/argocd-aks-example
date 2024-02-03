@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../base-4.8.3
+
+patches:
+# Remove IPv6 LoadBalancer service for Ted's test environment
+- target:
+    kind: Service
+    name: ingress-nginx-controller-ipv6
+  patch: |-
+    $patch: delete
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: ingress-nginx-controller-ipv6
+# Apply the static IPv4 address
+- target:
+    kind: Service
+    name: ingress-nginx-controller
+  patch: |-
+    - op: replace
+      path: /metadata/annotations/service.beta.kubernetes.io~1azure-load-balancer-ipv4
+      value: "10.203.0.254"

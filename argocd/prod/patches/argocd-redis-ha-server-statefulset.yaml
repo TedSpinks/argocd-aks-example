@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: argocd-redis-ha-server
+spec:
+  template:
+    spec:
+      containers:
+      - name: redis
+        resources:
+          requests:
+            cpu: 10m
+            memory: 37M
+          limits:
+            cpu: 26m
+            memory: 42M
+      - name: sentinel
+        resources:
+          requests:
+            cpu: 10m
+            memory: 24M
+          limits:
+            cpu: 26m
+            memory: 42M
+      - name: split-brain-fix
+        resources:
+          requests:
+            cpu: 10m
+            memory: 12M
+          limits:
+            cpu: 12m
+            memory: 14M

@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-redis-ha-haproxy
+spec:
+  template:
+    spec:
+      containers:
+      - name: haproxy
+        resources:
+          requests:
+            cpu: 10m
+            memory: 110M
+          limits:
+            cpu: 12m
+            memory: 128M

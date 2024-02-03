@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../base-4.8.3
+
+patches:
+# Apply the static IP addresses
+- target:
+    kind: Service
+    name: ingress-nginx-controller-ipv6
+  patch: |-
+    - op: replace
+      path: /metadata/annotations/service.beta.kubernetes.io~1azure-load-balancer-ipv6
+      value: "2620:12a:C0A3:3::254"
+- target:
+    kind: Service
+    name: ingress-nginx-controller
+  patch: |-
+    - op: replace
+      path: /metadata/annotations/service.beta.kubernetes.io~1azure-load-balancer-ipv4
+      value: "10.200.0.254"

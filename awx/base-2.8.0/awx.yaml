@@ -1,0 +1,15 @@
+# We'll also add LoadBalancer service with internal IPv6 to the ingress controller
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: prod
+spec:
+  postgres_configuration_secret: postgres-configuration
+  service_type: clusterip
+  ingress_type: ingress
+  ingress_class_name: nginx
+  hostname: replace_in_overlay
+  ingress_annotations: |
+    kubernetes.io/ingress.allow-http: "false"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"

@@ -1,0 +1,24 @@
+# https://argo-cd.readthedocs.io/en/stable/user-guide/application-specification/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  # Removed finalizer to prevent cascading delete of all apps
+  # finalizers:
+  # - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Use -10 for infrastructure, which is relied on by apps (default 0)
+    argocd.argoproj.io/sync-wave: "-10"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/TedSpinks/aks-argocd-example.git
+    targetRevision: HEAD
+    path: argocd/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).

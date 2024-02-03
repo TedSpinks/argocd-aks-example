@@ -1,0 +1,41 @@
+# References:
+# - Internal IP https://learn.microsoft.com/en-us/azure/aks/internal-lb?tabs=set-service-annotations#create-an-internal-load-balancer
+# - IPv6 https://learn.microsoft.com/en-us/azure/aks/configure-kubenet-dual-stack?tabs=azure-cli%2Cyaml#expose-the-workload-via-a-loadbalancer-type-service
+# - Static IP and DNS record https://learn.microsoft.com/en-us/azure/aks/static-ip#create-a-service-using-the-static-ip-address
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "/healthz"
+    # Use private IP addressing
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    # Specify the static IP address
+    service.beta.kubernetes.io/azure-load-balancer-ipv6: REPLACE_ME
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  name: ingress-nginx-controller-ipv6
+spec:
+  type: LoadBalancer
+  # IPv6 documentation (linked above) has conflicting statements about externalTrafficPolicy (Local vs Cluster)
+  # externalTrafficPolicy: Local
+  ipFamilies:
+    - IPv6
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+      appProtocol: http
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: https
+      appProtocol: https
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/component: controller

@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base-2.9.3/
+  - app-of-apps-root.yaml
+
+patches:
+# Apply the FQDNs for this Argo CD environment
+- target:
+    kind: Ingress
+    name: argocd-server-grpc-ingress
+  patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: grpc-argocd.example.com
+- target:
+    kind: Ingress
+    name: argocd-server-http-ingress
+  patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: argocd.example.com
+
+patchesStrategicMerge:
+  # Apply Azure SAML auth/RBAC
+  - patches/argocd-cm.yaml
+  - patches/argocd-rbac-cm.yaml
+  # Apply CPU/Memory recommendations from Goldilocks
+  - patches/argocd-application-controller-statefulset.yaml
+  - patches/argocd-applicationset-controller-deployment.yaml
+  - patches/argocd-dex-server-deployment.yaml
+  - patches/argocd-notifications-controller-deployment.yaml
+  - patches/argocd-redis-ha-haproxy-deployment.yaml
+  - patches/argocd-redis-ha-server-statefulset.yaml
+  - patches/argocd-repo-server-deployment.yaml
+  - patches/argocd-server-deployment.yaml

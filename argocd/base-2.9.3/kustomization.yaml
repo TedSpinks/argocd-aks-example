@@ -1,0 +1,34 @@
+# Note: After intermittent but frequent timeouts from Kustomize on these and other `raw.githubusercontent.com` 
+# files (even after adding a 90s timeout), I just copied them locally.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Namespace, labelled for Goldilocks
+  - resources/argocd-namespace.yaml
+
+  # Install Argo CD. Find the latest tag here: https://github.com/argoproj/argo-cd/releases
+
+  # HA (multiple replicas of each service).
+  # - https://raw.githubusercontent.com/argoproj/argo-cd/v2.9.3/manifests/ha/install.yaml?timeout=90s
+  - resources/ha-install.yaml
+
+  # Non-HA (1 replica of each service)
+  # - https://raw.githubusercontent.com/argoproj/argo-cd/v2.9.3/manifests/install.yaml
+  # - resources/install.yaml
+
+  # Ingress resources
+  # See https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#option-2-ssl-termination-at-ingress-controller
+  - resources/argocd-server-http-ingress.yaml
+  - resources/argocd-server-grpc-ingress.yaml
+
+namespace: argocd
+
+# Get the image tag for this specific version of Argo CD
+images:
+  - name: quay.io/argoproj/argocd
+    newTag: v2.9.3
+
+patchesStrategicMerge:
+  - patches/argocd-cm.yaml
+  - patches/argocd-cmd-params-cm.yaml

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+spec:
+  template:
+    spec:
+      containers:
+      - name: argocd-repo-server
+        # Goldilocks / VPA recommended 50m CPU but for larger app consistently hitting this error:
+        # ComparisonError: rpc error: code = Unknown desc = Manifest generation error (cached): kustomize build /tmp/git@github.com_<owner>_kubernetes/<path> --enable-helm failed timeout after 1m30s
+        # See this ticket for more details:
+        # https://github.com/argoproj/argo-cd/issues/9701
+        # https://github.com/HariSekhon/Kubernetes-configs/blob/master/argocd/base/argocd-resources.argocd-repo-server.jsonpatch.yaml
+        resources:
+          requests:
+            cpu: '1'
+            memory: 0.5Gi
+          limits:
+            cpu: '1.5'
+            memory: 1.0Gi

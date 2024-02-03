@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base-2.8.0
+
+# Specify a namespace in which to install AWX (should match your environment)
+namespace: awx-prod
+
+# Specify a name for the AWX instance (should match your environment)
+patches:
+- target:
+    kind: AWX
+  patch: |-
+    - op: replace
+      path: /metadata/name
+      value: "awx-prod"
+    - op: replace
+      path: /spec/hostname
+      value: "ansible.example.com"

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps-root
+  namespace: argocd
+  # Removed finalizer to prevent cascading delete at of entire Argo CD environment
+  # finalizers:
+  # - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://github.com/TedSpinks/aks-argocd-example.git
+    targetRevision: HEAD
+    path: argocd/prod/apps
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      # False to prevent cascading delete at of entire Argo CD environment
+      prune: false # Specifies if resources should be pruned during auto-syncing ( false by default ).
