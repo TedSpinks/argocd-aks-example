@@ -75,7 +75,7 @@ az aks update -g $RESOURCE_GROUP -n $CLUSTER_NAME --enable-vpa
 
 #### 3. Create DNS records
 
-Assign a static IPv4 and IPv4 address to be used for ingress URLs. Create the following DNS records, which point to that address:
+Assign a static IPv4 and IPv6 address to be used for ingress URLs. Create the following DNS records, which point to that address:
 
 - AWX
   - ansible.example.com
